@@ -11,7 +11,7 @@ public Profile(String Username, String Id, String Phonenum) {
 	this.Phonenum = Phonenum;
 }
 
-
+Contactlist obj = new Contactlist(); 
 
 public String getUsername(){
 	return Username;
