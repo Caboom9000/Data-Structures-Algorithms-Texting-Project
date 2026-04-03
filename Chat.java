@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 3cab36adc3742454735b5026f733268dcba7aa75
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
@@ -25,7 +20,7 @@ public class Chat extends JPanel {
         // Use BorderLayout for clean structure
         setLayout(new BorderLayout(10, 10));
 
-        // ===== CHAT DISPLAY AREA =====
+        // chat display area
         chatWindow = new JTextArea();
         chatWindow.setEditable(false);
         chatWindow.setLineWrap(true);
@@ -34,7 +29,7 @@ public class Chat extends JPanel {
         JScrollPane scrollPane = new JScrollPane(chatWindow);
         add(scrollPane, BorderLayout.CENTER);
 
-        // ===== INPUT AREA (BOTTOM) =====
+        // input area (bottom)
         JPanel inputPanel = new JPanel(new BorderLayout(5, 5));
 
         chatbox = new JTextField();
@@ -45,7 +40,7 @@ public class Chat extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // ===== ACTION LISTENER =====
+        // action listeners
         send.addActionListener(e -> sendMessage());
 
         // Allow pressing ENTER to send
