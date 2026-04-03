@@ -1,12 +1,13 @@
-package DataMessagingAppLanding;
 
-public class Main {
+
+public class main {
     public static void main(String[] args) {
+Contactlist contactlist = new Contactlist();
 
-        UserProfile user = new UserProfile("user1", "Name", "000000000");
-        ChatManager chatManager = new ChatManager();
-        ContactManager contactManager = new ContactManager();
-
-        new LandingPageGUI(user, chatManager, contactManager);
+contactlist.addContact(new Contact("Frank", "1", "1111111111"));
+contactlist.addContact(new Contact("Bob", "2", "222222222222"));
+contactlist.addContact(new Contact("Fred", "3", "33333333333"));
+        
+new LandingPageGUI(contactlist);
     }
 }

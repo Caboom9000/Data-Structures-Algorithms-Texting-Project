@@ -1,4 +1,4 @@
-package DataMessagingAppLanding;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,6 +68,10 @@ public class Chat extends JPanel {
             chatWindow.append("You (" + time + "): " + newMessage.getCont() + "\n");
 
             chatbox.setText("");
-        }
+        } 
     }
+    
+    public Deque<Msg> getMessages(){
+        	return queue;
+        	}
 }

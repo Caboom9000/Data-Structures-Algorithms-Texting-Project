@@ -15,10 +15,6 @@ import java.util.HashSet;
 
 public class Contactlist {
 	private final ArrayList<Contact> contacts = new ArrayList<>();
-
-	Chat obj = new Chat();
-	
-	
 	
 //add/remove contacts
 public void addContact(Contact contact) {
@@ -31,8 +27,6 @@ public void removeContact(Contact contact) {
 
 //display contacts
 public void displaycontacts() {
-	for (int i = 0; i < contacts.size(); i++) {
-	
 	if (contacts.isEmpty()) {
 		System.out.println("No contacts :(");
 		return;
@@ -44,7 +38,6 @@ public void displaycontacts() {
 		System.out.println("Name: " + c.getConname());
 		System.out.println("Phone: " + c.getConnum());
 		System.out.println("                         ");
-	}
 	}
 }
 
