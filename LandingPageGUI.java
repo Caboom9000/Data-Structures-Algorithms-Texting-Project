@@ -7,19 +7,15 @@ import java.util.Queue;   // Used for storing chats
 public class LandingPageGUI extends JFrame {
 
     // References to other classes 
-    private UserProfile user;
-    private ChatManager chatManager;
-    private ContactManager contactManager;
+    UserProfile user = new UserProfile("user1", "Name", "000000000");
+    ContactManager contactManager = new ContactManager();
 
     // Models store data for JList components
     private DefaultListModel<String> contactListModel;
     private DefaultListModel<String> chatListModel;
 
     // Constructor: sets up the window
-    public LandingPageGUI(UserProfile user, ChatManager chatManager, ContactManager contactManager) {
-        this.user = user;
-        this.chatManager = chatManager;
-        this.contactManager = contactManager;
+    public LandingPageGUI() {
 
         // Basic window settings
         setTitle("Chat Application");
@@ -30,7 +26,6 @@ public class LandingPageGUI extends JFrame {
         setLayout(new BorderLayout(10, 10));
 
         buildUI();     // Create all UI components
-        loadChats();   // Load chat data into the interface
 
         setVisible(true); // Make the window visible
     }
@@ -83,15 +78,10 @@ public class LandingPageGUI extends JFrame {
         centerPanel.add(contactName, BorderLayout.NORTH);
 
         // Chat list model + list
-        chatListModel = new DefaultListModel<>();
-        JList<String> chatList = new JList<>(chatListModel);
+        Chat chatPanel = new Chat();
 
-        // Scrolling chat display
-        centerPanel.add(new JScrollPane(chatList), BorderLayout.CENTER);
-
-        // Button at bottom to send/create message
-        JButton newMessage = new JButton("New message");
-        centerPanel.add(newMessage, BorderLayout.SOUTH);
+        // Wrap in scroll if needed
+        centerPanel.add(chatPanel, BorderLayout.CENTER);
 
         // Add centre panel to main window
         add(centerPanel, BorderLayout.CENTER);
@@ -121,27 +111,7 @@ public class LandingPageGUI extends JFrame {
 
         editProfile.addActionListener(e -> user.openProfile());
 
-        newMessage.addActionListener(e -> chatManager.createChat());
     }
 
-    // Loads chat data from ChatManager into the GUI
-    private void loadChats() {
-
-        // Clear existing data
-        chatListModel.clear();
-
-        // Get chats from ChatManager 
-        Queue<Chat> chats = chatManager.getChatsQueue();
-
-        // Loop through queue and display each chat
-        for (Chat chat : chats) {
-
-            // Format how each chat appears in the list
-            chatListModel.addElement(
-                    chat.getSenderName() +
-                    " | " + chat.getReadStatus() +
-                    " | " + chat.getTime()
-            );
-        }
-    }
+    
 }
