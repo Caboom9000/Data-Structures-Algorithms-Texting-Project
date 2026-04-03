@@ -1,4 +1,4 @@
-package DataMessagingAppLanding;
+
 
 import javax.swing.*;     // Provides GUI components like JFrame, JButton, JList
 import java.awt.*;        // Provides layout managers and styling tools

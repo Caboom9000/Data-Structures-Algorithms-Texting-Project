@@ -1,4 +1,3 @@
-package DataMessagingAppLanding;
 
 public class ContactManager {
 
