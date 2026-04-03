@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 3cab36adc3742454735b5026f733268dcba7aa75
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
@@ -68,6 +71,31 @@ public class Chat extends JPanel {
             chatWindow.append("You (" + time + "): " + newMessage.getCont() + "\n");
 
             chatbox.setText("");
+        }
+    }
+    
+    public void deleteLastMessage() {
+        if (!queue.isEmpty()) {
+            queue.removeLast();
+            refreshChatWindow();
+        }
+    }
+
+    public void editLastMessage(String newContent) {
+        if (!queue.isEmpty()) {
+            Msg last = queue.removeLast();
+            last.setCont(newContent);
+            queue.addLast(last);
+            refreshChatWindow();
+        }
+    }
+
+    // Refresh the chatWindow display
+    private void refreshChatWindow() {
+        chatWindow.setText("");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        for (Msg msg : queue) {
+            chatWindow.append("You (" + msg.getTime().format(formatter) + "): " + msg.getCont() + "\n");
         }
     }
 }
