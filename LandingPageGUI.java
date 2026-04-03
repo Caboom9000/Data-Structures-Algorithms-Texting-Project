@@ -1,5 +1,3 @@
-package DataMessagingAppLanding;
-
 import javax.swing.*;     // Provides GUI components like JFrame, JButton, JList
 import java.awt.*;        // Provides layout managers and styling tools
 import java.util.Queue;   // Used for storing chats 
@@ -110,6 +108,28 @@ public class LandingPageGUI extends JFrame {
         changeProfile.addActionListener(e -> user.openProfile());
 
         editProfile.addActionListener(e -> user.openProfile());
+        
+     // ===== CHAT EDIT/DELETE BUTTONS =====
+        JPanel chatButtonsPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+
+        JButton editChat = new JButton("Edit Last Chat");
+        JButton deleteChat = new JButton("Delete Last Chat");
+
+        chatButtonsPanel.add(editChat);
+        chatButtonsPanel.add(deleteChat);
+
+        // Add this panel below chat window
+        centerPanel.add(chatButtonsPanel, BorderLayout.SOUTH);
+
+        // ===== BUTTON ACTIONS =====
+        deleteChat.addActionListener(e -> chatPanel.deleteLastMessage());
+
+        editChat.addActionListener(e -> {
+            String newContent = JOptionPane.showInputDialog(this, "Edit last message:");
+            if (newContent != null && !newContent.trim().isEmpty()) {
+                chatPanel.editLastMessage(newContent.trim());
+            }
+        });
 
     }
 
