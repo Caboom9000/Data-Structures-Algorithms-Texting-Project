@@ -1,4 +1,3 @@
-package messageappgp;
 
 import java.util.Scanner;
 

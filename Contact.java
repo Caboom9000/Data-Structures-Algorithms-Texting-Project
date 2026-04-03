@@ -1,4 +1,4 @@
-package messageappgp;
+
 
 public class Contact {
 	private String Conname;
@@ -11,7 +11,7 @@ public Contact(String Conname, String Conid, String Connum) {
 	this.Connum = Connum;
 }
 
-
+Chat obj = new Chat();
 
 public String getConname(){
 	return Conname;

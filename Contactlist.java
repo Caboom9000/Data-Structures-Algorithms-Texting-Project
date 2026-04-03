@@ -1,11 +1,14 @@
-package messageappgp;
+
 
 import java.util.ArrayList;
+
+
 
 public class Contactlist {
 	private final ArrayList<Contact> contacts = new ArrayList<>();
 
-
+	Chat obj = new Chat();
+	
 //add/remove contacts
 public void addContact(Contact contact) {
 	contacts.add(contact);

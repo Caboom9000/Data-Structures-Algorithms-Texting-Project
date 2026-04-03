@@ -1,4 +1,4 @@
-package messageappgp;
+
 
 public class Profile {
 	private String Username;
