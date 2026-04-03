@@ -1,4 +1,3 @@
-
 import javax.swing.*;     // Provides GUI components like JFrame, JButton, JList
 import java.awt.*;        // Provides layout managers and styling tools
 import java.util.Queue;   // Used for storing chats 
@@ -85,7 +84,7 @@ public class LandingPageGUI extends JFrame {
         // Add centre panel to main window
         add(centerPanel, BorderLayout.CENTER);
 
-        // ===== RIGHT PANEL: PROFILE OPTIONS =====
+        // right panel profile
         JPanel rightPanel = new JPanel();
 
         // 2 rows: Change profile + Edit profile
@@ -110,7 +109,7 @@ public class LandingPageGUI extends JFrame {
 
         editProfile.addActionListener(e -> user.openProfile());
         
-     // ===== CHAT EDIT/DELETE BUTTONS =====
+     // chat edit/delete buttons
         JPanel chatButtonsPanel = new JPanel(new GridLayout(1, 2, 5, 5));
 
         JButton editChat = new JButton("Edit Last Chat");
@@ -122,7 +121,7 @@ public class LandingPageGUI extends JFrame {
         // Add this panel below chat window
         centerPanel.add(chatButtonsPanel, BorderLayout.SOUTH);
 
-        // ===== BUTTON ACTIONS =====
+        // buttons
         deleteChat.addActionListener(e -> chatPanel.deleteLastMessage());
 
         editChat.addActionListener(e -> {
