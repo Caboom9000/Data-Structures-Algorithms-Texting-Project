@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 9d04b06e5a3721f11dc0a25a7daae812f0bd0ec3
 import javax.swing.*;     // Provides GUI components like JFrame, JButton, JList
 import java.awt.*;        // Provides layout managers and styling tools
 import java.util.Queue;   // Used for storing chats 
