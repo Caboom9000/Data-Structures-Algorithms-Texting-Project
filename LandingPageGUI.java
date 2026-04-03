@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 9d04b06e5a3721f11dc0a25a7daae812f0bd0ec3
 import javax.swing.*;     // Provides GUI components like JFrame, JButton, JList
 import java.awt.*;        // Provides layout managers and styling tools
 import java.util.Queue;   // Used for storing chats 
@@ -223,7 +226,7 @@ private JList<String> contactList;
        
        add(centerPanel, BorderLayout.CENTER);
 
-        // ===== RIGHT PANEL: PROFILE OPTIONS =====
+        // right panel profile
         JPanel rightPanel = new JPanel();
 
         // 2 rows: Change profile + Edit profile
@@ -265,6 +268,28 @@ private JList<String> contactList;
         changeProfile.addActionListener(e -> user.openProfile());
 
         editProfile.addActionListener(e -> user.openProfile());
+        
+     // chat edit/delete buttons
+        JPanel chatButtonsPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+
+        JButton editChat = new JButton("Edit Last Chat");
+        JButton deleteChat = new JButton("Delete Last Chat");
+
+        chatButtonsPanel.add(editChat);
+        chatButtonsPanel.add(deleteChat);
+
+        // Add this panel below chat window
+        centerPanel.add(chatButtonsPanel, BorderLayout.SOUTH);
+
+        // buttons
+        deleteChat.addActionListener(e -> chatPanel.deleteLastMessage());
+
+        editChat.addActionListener(e -> {
+            String newContent = JOptionPane.showInputDialog(this, "Edit last message:");
+            if (newContent != null && !newContent.trim().isEmpty()) {
+                chatPanel.editLastMessage(newContent.trim());
+            }
+        });
 
     }*/
 

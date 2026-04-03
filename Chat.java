@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 9d04b06e5a3721f11dc0a25a7daae812f0bd0ec3
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
@@ -22,7 +25,7 @@ public class Chat extends JPanel {
         // Use BorderLayout for clean structure
         setLayout(new BorderLayout(10, 10));
 
-        // ===== CHAT DISPLAY AREA =====
+        // chat display area
         chatWindow = new JTextArea();
         chatWindow.setEditable(false);
         chatWindow.setLineWrap(true);
@@ -31,7 +34,7 @@ public class Chat extends JPanel {
         JScrollPane scrollPane = new JScrollPane(chatWindow);
         add(scrollPane, BorderLayout.CENTER);
 
-        // ===== INPUT AREA (BOTTOM) =====
+        // input area (bottom)
         JPanel inputPanel = new JPanel(new BorderLayout(5, 5));
 
         chatbox = new JTextField();
@@ -42,7 +45,7 @@ public class Chat extends JPanel {
 
         add(inputPanel, BorderLayout.SOUTH);
 
-        // ===== ACTION LISTENER =====
+        // action listeners
         send.addActionListener(e -> sendMessage());
 
         // Allow pressing ENTER to send
@@ -71,7 +74,34 @@ public class Chat extends JPanel {
         } 
     }
     
+<<<<<<< HEAD
     public Deque<Msg> getMessages(){
         	return queue;
         	}
+=======
+    public void deleteLastMessage() {
+        if (!queue.isEmpty()) {
+            queue.removeLast();
+            refreshChatWindow();
+        }
+    }
+
+    public void editLastMessage(String newContent) {
+        if (!queue.isEmpty()) {
+            Msg last = queue.removeLast();
+            last.setCont(newContent);
+            queue.addLast(last);
+            refreshChatWindow();
+        }
+    }
+
+    // Refresh the chatWindow display
+    private void refreshChatWindow() {
+        chatWindow.setText("");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        for (Msg msg : queue) {
+            chatWindow.append("You (" + msg.getTime().format(formatter) + "): " + msg.getCont() + "\n");
+        }
+    }
+>>>>>>> 9d04b06e5a3721f11dc0a25a7daae812f0bd0ec3
 }
