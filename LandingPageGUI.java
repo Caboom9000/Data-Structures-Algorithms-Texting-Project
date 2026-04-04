@@ -12,7 +12,6 @@ private JList<String> contactList;
 
 	// profile
 	private JLabel nameLabel;
-	private JLabel idLabel;
 	private JLabel phoneLabel;
 
 	
@@ -21,22 +20,19 @@ private JList<String> contactList;
 		this.fileSys = _fileSys;
 
 		// Basic window settings
-		setTitle("Chat Application");
+		setTitle("chirp!");
 		setSize(950, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// BorderLayout splits screen into top, left, centre, right, bottom
 		setLayout(new BorderLayout(10, 10));
-
-		buildUI();     // Create all UI components
-		setVisible(true); // Make the window visible
 	}
 
 	// Builds the entire UI layout
-	private void buildUI()
+	public void buildUI()
 	{
 		// Top section/App title
-		JLabel title = new JLabel("Name of App", SwingConstants.CENTER);
+		JLabel title = new JLabel("chirp!", SwingConstants.CENTER);
 		title.setFont(new Font("Arial", Font.BOLD, 22)); // Styling
 		add(title, BorderLayout.NORTH);
 
@@ -56,25 +52,16 @@ private JList<String> contactList;
 		
 		//add contact 
 		addContact.addActionListener(e -> {
-			//input dialog for name id and phone
-			String name = JOptionPane.showInputDialog(this, "Enter contact name:");
-			if (name == null || name.trim().isEmpty()) {
-				return;
-			}
-			
-			String id = JOptionPane.showInputDialog(this, "Enter contact id:");
-			if (id == null || id.trim().isEmpty()) {
-				return;
-			}
-			
-			String num = JOptionPane.showInputDialog(this, "Enter phone number:");
-			if (num == null || num.trim().isEmpty()) {
-			return;
-		}
-		//create new contact object add to list and refresh
-		Contact newContact = new Contact(name.trim(), id.trim(), num.trim());
-		fileSys.addContact(newContact);
-		refreshContactList();
+			String[] contactInfo = showInfoDialog("Add Contact", "", "");
+			if (contactInfo == null) return;
+
+			String name = contactInfo[0];
+			String num  = contactInfo[1];
+
+			//create new contact object add to list and refresh
+			Contact newContact = new Contact(name, fileSys.getNewId(), num);
+			fileSys.addContact(newContact);
+			refreshContactList();
 	   	});
 		
 		//remove contact
@@ -84,9 +71,17 @@ private JList<String> contactList;
 			
 
 			if (index >= 0) {
+				int confirm = JOptionPane.showConfirmDialog(
+					this,
+					"Are you sure?",
+					"Confirm deletion",
+					JOptionPane.YES_NO_OPTION
+				);
+				if (confirm == JOptionPane.NO_OPTION)
+					return;
 				//gets contact from list + remove it
 				Contact selectedContact;
-                            selectedContact = fileSys.getContacts().get(index);
+							selectedContact = fileSys.getContacts().get(index);
 				fileSys.removeContact(selectedContact);
 				refreshContactList();
 				
@@ -107,36 +102,24 @@ private JList<String> contactList;
 		editContact.addActionListener(e -> {
 			int index = contactList.getSelectedIndex();
 			
-			if(index >= 0) {
-				//get selected contact
+			if(index >= 0)
+			{
+				//get selected contact [TODO]
 				Contact selectedContact = fileSys.getContacts().get(index);
 				
-				String newName = JOptionPane.showInputDialog(this, "edit contact name:", selectedContact.getConname());
-				
-				if (newName == null || newName.trim().isEmpty()) {
-				return;			
+				String [] newInfo = showInfoDialog("Edit contact", selectedContact.getConname(), selectedContact.getConnum());
+
+				String name = newInfo[0];
+				String num = newInfo[1];
+
+				fileSys.editContact(selectedContact, name, num);
+
+				refreshContactList();
+				contactList.setSelectedIndex(index);
+				contactName.setText(selectedContact.getConname());
 			}
-			
-			String newId = JOptionPane.showInputDialog(this, "edit contact id:", selectedContact.getConid());
-			
-			if (newId == null || newId.trim().isEmpty()) {
-			return;		
-		}
-		
-		String newNum = JOptionPane.showInputDialog(this, "edit contact phone number:", selectedContact.getConnum());
-		
-		if (newNum == null || newNum.trim().isEmpty()) {
-		return;	
-		}
-		
-		selectedContact.setConname(newName.trim());
-		selectedContact.setConid(newId.trim());
-		selectedContact.setConnum(newNum.trim());
-		
-		refreshContactList();
-		contactList.setSelectedIndex(index);
-		contactName.setText(selectedContact.getConname());
-			} else {
+			else 
+			{
 				//no selected contact
 				JOptionPane.showMessageDialog(this, "Please choose a contact to edit");
 			}
@@ -188,15 +171,12 @@ private JList<String> contactList;
 		profilePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5)); // padding
 
 		this.nameLabel = new JLabel("Name:" + fileSys.getUsername());
-		this.idLabel = new JLabel("ID: " + fileSys.getId());
 		this.phoneLabel = new JLabel("Phone No.: " + fileSys.getPhonenum());
 
 		this.nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		this.idLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.phoneLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		profilePanel.add(nameLabel);
-		profilePanel.add(idLabel);
 		profilePanel.add(phoneLabel);
 		/*				 */
 
@@ -280,56 +260,17 @@ private JList<String> contactList;
 			
 		//edit profile
 		editProfile.addActionListener(e -> {
-			JTextField nameField = new JTextField(fileSys.getUsername(), 15);
-			JTextField idField = new JTextField(fileSys.getId(), 10);
-			JTextField phoneField = new JTextField(fileSys.getPhonenum(), 12);
+			String[] newInfo = showInfoDialog("Edit profile", fileSys.getUsername(), fileSys.getPhonenum());
+			if (newInfo == null) return;
 
-			// Panel full of multiple fields
-			JPanel profileChangePanel = new JPanel(new GridLayout(0, 1));
-			profileChangePanel.add(new JLabel("Name:"));
-			profileChangePanel.add(nameField);
-			profileChangePanel.add(new JLabel("ID:"));
-			profileChangePanel.add(idField);
-			profileChangePanel.add(new JLabel("Phone:"));
-			profileChangePanel.add(phoneField);
-			
-			// Confirmation dialogue
-			int result = JOptionPane.showConfirmDialog
-			(
-				this, 
-				profileChangePanel, 
-				"Edit Profile", 
-				JOptionPane.OK_CANCEL_OPTION, 
-				JOptionPane.PLAIN_MESSAGE
-			);
+			String newName = newInfo[0];
+			String newNum  = newInfo[1];
 
-			if (result == JOptionPane.OK_OPTION)
-			{
-				String newName = nameField.getText().trim();
-				String newId = idField.getText().trim();
-				String newNum = phoneField.getText().trim();
-			
-				if (!newName.isEmpty() && !newId.isEmpty() && !newNum.isEmpty())
-				{
-					fileSys.setName(newName);
-					fileSys.setId(newId);
-					fileSys.setNum(newNum);
+			nameLabel.setText(newName);
+			phoneLabel.setText(newNum);
 
-					// refresh labels for ui
-					nameLabel.setText("Name: " + fileSys.getUsername());
-					idLabel.setText("ID: " + fileSys.getId());
-					phoneLabel.setText("Phone No.: " + fileSys.getPhonenum());
-				
-					JOptionPane.showMessageDialog(this, "Profile updated!");
-				}
-			}
-
-			// update profile
-			/*profile.setName(newName.trim());
-			profile.setId(newId.trim());
-			profile.setNum(newNum.trim());*/
-			
-			//JOptionPane.showMessageDialog(this, "Profile updated \nName: " + profile.getUsername() + "\nId: " + profile.getId() + "\nPhone number: " +profile.getPhonenum());
+			fileSys.setName(newName);
+			fileSys.setNum(newNum);
 		});}
 	 //refresh (syncs ui)   	
 	private void refreshContactList() {
@@ -339,85 +280,36 @@ private JList<String> contactList;
 			contactListModel.addElement(c.getConname());
 		}
 	}
+
+	// Reusable edit/add dialogue for contacts and user profile
+	private String[] showInfoDialog(String title, String currentName, String currentNum)
+	{
+		JTextField nameField = new JTextField(currentName, 15);
+		JTextField phoneField = new JTextField(currentNum, 12);
+
+		JPanel editPanel = new JPanel(new GridLayout(0, 1));
+		editPanel.add(new JLabel("Name:"));
+		editPanel.add(nameField);
+		editPanel.add(new JLabel("Phone:"));
+		editPanel.add(phoneField);
+
+		int result = JOptionPane.showConfirmDialog(
+			this, 
+			editPanel, 
+			title, 
+			JOptionPane.OK_CANCEL_OPTION, 
+			JOptionPane.PLAIN_MESSAGE
+		);
+
+		if (result == JOptionPane.OK_OPTION)
+		{
+			String inputName = nameField.getText().trim();
+			String inputNum = phoneField.getText().trim();
+			if (!inputName.isEmpty() && !inputNum.isEmpty())
+			{
+				return new String[]{inputName, inputNum};
+			}
+		}
+		return null; // user canceled or fields invalid
 	}
-			
-			/*    //main panel/Chat area
-		centerPanel = new JPanel();
-		centerPanel.setLayout(new BorderLayout());
-
-	   contactName = new JLabel("select a contact");
-	   contactName.setFont(new Font("Arial", Font.BOLD, 16));
-	   
-	   centerPanel.add(contactName, BorderLayout.NORTH);
-	   
-	   add(centerPanel, BorderLayout.CENTER);
-
-		// right panel profile
-		JPanel rightPanel = new JPanel();
-
-		// 2 rows: Change profile + Edit profile
-		rightPanel.setLayout(new GridLayout(2, 1, 10, 10));
-
-		// Border label
-		rightPanel.setBorder(BorderFactory.createTitledBorder("Profile"));
-
-		JButton changeProfile = new JButton("Change profile");
-		JButton editProfile = new JButton("Edit profile");
-
-		rightPanel.add(changeProfile);
-		rightPanel.add(editProfile);
-
-		// Add right panel to main window
-		add(rightPanel, BorderLayout.EAST);
-
-		// Buttons
-		// These call methods in other classes 
-		 
-		contactList.addListSelectionListener(e -> {
-			if (!e.getValueIsAdjusting()) {
-				int index = contactList.getSelectedIndex();
-				
-				if (index >= 0) {
-					Contact selectedContact = contactlist.getContacts().get(index);
-					
-					centerPanel.removeAll();
-					
-					contactName.setText(selectedContact.getConname());
-					centerPanel.add(contactName, BorderLayout.NORTH);
-					centerPanel.add(selectedContact.getChat(), BorderLayout.CENTER);
-					
-					centerPanel.revalidate();
-					centerPanel.repaint();
-				}
-			}
-		}}
-		changeProfile.addActionListener(e -> user.openProfile());
-
-		editProfile.addActionListener(e -> user.openProfile());
-		
-	 // chat edit/delete buttons
-		JPanel chatButtonsPanel = new JPanel(new GridLayout(1, 2, 5, 5));
-
-		JButton editChat = new JButton("Edit Last Chat");
-		JButton deleteChat = new JButton("Delete Last Chat");
-
-		chatButtonsPanel.add(editChat);
-		chatButtonsPanel.add(deleteChat);
-
-		// Add this panel below chat window
-		centerPanel.add(chatButtonsPanel, BorderLayout.SOUTH);
-
-		// buttons
-		deleteChat.addActionListener(e -> chatPanel.deleteLastMessage());
-
-		editChat.addActionListener(e -> {
-			String newContent = JOptionPane.showInputDialog(this, "Edit last message:");
-			if (newContent != null && !newContent.trim().isEmpty()) {
-				chatPanel.editLastMessage(newContent.trim());
-			}
-		});
-
-	}*/
-
-	
-
+}

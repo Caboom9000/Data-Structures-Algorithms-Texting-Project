@@ -62,11 +62,11 @@ public class Contactlist
 	}
 	public Contact searchId(String Id)
 	{
-		for (Contact c : contacts)
+		for (Contact contact : contacts)
 		{
-			if (c.getConid().equalsIgnoreCase(Id))
+			if (String.valueOf(contact.getConid()).equalsIgnoreCase(Id))
 			{
-				return c;
+				return contact;
 			}
 		}
 		return null;

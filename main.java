@@ -5,6 +5,8 @@ public class Main
 		FileSystem fileSys = new FileSystem();
 			
 		//open gui
-		new LandingPageGUI(fileSys);
+		LandingPageGUI gui = new LandingPageGUI(fileSys);
+		gui.buildUI();
+		gui.setVisible(true);
 	}
 }

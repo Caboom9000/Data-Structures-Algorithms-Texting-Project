@@ -1,12 +1,12 @@
 public class Contact
 {
 	private String Conname;
-	private String Conid;
+	private final int Conid;
 	private String Connum;
 	private final Chat chat;
 	
 
-	public Contact(String Conname, String Conid, String Connum)
+	public Contact(String Conname, int Conid, String Connum)
 	{
 		this.Conname = Conname;
 		this.Conid = Conid;
@@ -20,11 +20,6 @@ public class Contact
 		this.Conname = conname;
 	}
 	
-	public void setConid(String conid)
-	{
-		this.Conid = conid;
-	}
-	
 	public void setConnum(String connum)
 	{
 		this.Connum = connum;
@@ -36,7 +31,7 @@ public class Contact
 		return Conname;
 	}
 	
-	public String getConid()
+	public int getConid()
 	{
 		return Conid;
 	}
