@@ -7,6 +7,7 @@ public class Contact {
 	private String Connum;
 	private Chat chat;
 	
+	//constructor
 public Contact(String Conname, String Conid, String Connum) {
 	this.Conname = Conname;
 	this.Conid = Conid;

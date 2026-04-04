@@ -5,6 +5,7 @@ public class Profile {
 	private String Id;
 	private String Phonenum;
 
+	//constructor
 public Profile(String Username, String Id, String Phonenum) {
 	this.Username = Username;
 	this.Id = Id;
@@ -36,6 +37,7 @@ public String getPhonenum(){
 	return Phonenum;
 }
 
+//display profile
 public void displayprofile(){
 	System.out.println("                         ");
 	System.out.println("ID: " + Id);

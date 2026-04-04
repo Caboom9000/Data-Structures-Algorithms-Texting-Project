@@ -7,14 +7,16 @@ public class LandingPageGUI extends JFrame {
 private DefaultListModel<String> contactListModel;
 private JList<String> contactList;
     private Contactlist contactlist;
-    
+    private Profile profile;
+   
     private JPanel centerPanel;
     private JLabel contactName;
 
     // Constructor: sets up the window
     public LandingPageGUI(Contactlist contactlist) {
     	this.contactlist = contactlist; 
-    	
+    	//default profile
+    	this.profile = new Profile("Your name", "0", "000000000000");
         // Basic window settings
         setTitle("Chat Application");
         setSize(900, 600);
@@ -50,8 +52,10 @@ private JList<String> contactList;
         JButton addContact = new JButton("Add contact");
         JButton removeContact = new JButton("Remove");
         JButton editContact = new JButton("Edit contact");
-
+        
+        //add contact 
         addContact.addActionListener(e -> {
+        	//input dialog for name id and phone
         	String name = JOptionPane.showInputDialog(this, "Enter contact name:");
         	if (name == null || name.trim().isEmpty()) {
         		return;
@@ -66,7 +70,7 @@ private JList<String> contactList;
         	if (num == null || num.trim().isEmpty()) {
         	return;
         }
-        
+        //create new contact object add to list and refresh
         Contact newContact = new Contact(name.trim(), id.trim(), num.trim());
         contactlist.addContact(newContact);;
         refreshContactList();
@@ -74,20 +78,24 @@ private JList<String> contactList;
         
         //remove contact
         removeContact.addActionListener(e -> {
-    		int index = contactList.getSelectedIndex();
+    		//get selected index from jlist
+        	int index = contactList.getSelectedIndex();
     		
+
     		if (index >= 0) {
+    			//gets contact from list + remove it
     			Contact selectedContact = contactlist.getContacts().get(index);
     			contactlist.removeContact(selectedContact);
-    			
     			refreshContactList();
     			
+    			//reset chat panel
     			centerPanel.removeAll();
     			contactName.setText("Select a contact");
     			centerPanel.add(contactName, BorderLayout.NORTH);
     			centerPanel.revalidate();
     			centerPanel.repaint();
     		} else {
+    			//no selection made
     			JOptionPane.showMessageDialog(this, "Please select a contact to remove");
     			
     		}
@@ -98,6 +106,7 @@ private JList<String> contactList;
     		int index = contactList.getSelectedIndex();
     		
     		if(index >= 0) {
+    			//get selected contact
     			Contact selectedContact = contactlist.getContacts().get(index);
     			
     			String newName = JOptionPane.showInputDialog(this, "edit contact name:", selectedContact.getConname());
@@ -117,19 +126,21 @@ private JList<String> contactList;
 		if (newNum == null || newNum.trim().isEmpty()) {
 		return;	
 		}
-		
+		//update contact name id num
 		selectedContact.setConname(newName.trim());
 		selectedContact.setConid(newId.trim());
 		selectedContact.setConnum(newNum.trim());
-		
 		refreshContactList();
+		
+		//update lable
 		contactList.setSelectedIndex(index);
 		contactName.setText(selectedContact.getConname());
     		} else {
+    			//no selected contact
     			JOptionPane.showMessageDialog(this, "Please choose a contact to edit");
     		}
     	});
-        
+        //add buttons to panel
         contactButtons.add(addContact);
         contactButtons.add(removeContact);
         contactButtons.add(editContact);
@@ -168,14 +179,15 @@ private JList<String> contactList;
         rightPanel.setLayout(new GridLayout(2, 1, 10, 10));
         rightPanel.setBorder(BorderFactory.createTitledBorder("Profile"));
         
-        JButton changeProfile = new JButton("Change profile");
+        JButton showProfile = new JButton("Show profile");
         JButton editProfile = new JButton("Edit profile");
         
-        rightPanel.add(changeProfile);
+        rightPanel.add(showProfile);
         rightPanel.add(editProfile);
         
         add(rightPanel, BorderLayout.EAST);
         
+        //contact selection
         contactList.addListSelectionListener(e -> {
         	if (!e.getValueIsAdjusting()) {
         		int index = contactList.getSelectedIndex();
@@ -183,6 +195,7 @@ private JList<String> contactList;
         		if (index >= 0) {
         			Contact selectedContact = contactlist.getContacts().get(index);
         			
+        			//clear previous ui
         			centerPanel.removeAll();
         			
         			contactName.setText(selectedContact.getConname());
@@ -194,14 +207,32 @@ private JList<String> contactList;
         		}
         	}
         });
-        
-        changeProfile.addActionListener(e ->
-        	JOptionPane.showMessageDialog(this, "Change profile clicked"));
+        //show profile
+        showProfile.addActionListener(e ->
+        	JOptionPane.showMessageDialog(this, "Name: " + profile.getUsername() + "\nID: " + profile.getId() + "\nPhone number: " + profile.getPhonenum()));
         	
-        	editProfile.addActionListener(e ->
-        		JOptionPane.showMessageDialog(this, "Edit profile clicked"));
-    }
-    
+        //edit profile
+        	editProfile.addActionListener(e -> {
+        	String newName = JOptionPane.showInputDialog(this, "Edit profile name:", profile.getUsername());
+        	if (newName == null || newName.trim().isEmpty()) {
+        		return;
+        	}
+        	String newId = JOptionPane.showInputDialog(this, "Edit profile id:", profile.getId());
+        	if (newId == null || newId.trim().isEmpty()) {
+        		return;
+        	    }
+        	String newNum = JOptionPane.showInputDialog(this, "change phone number:", profile.getPhonenum());
+        	if (newNum == null || newNum.trim().isEmpty()) {
+        		return;
+        	}
+        	// update profile
+        	profile.setName(newName.trim());
+        	profile.setId(newId.trim());
+        	profile.setNum(newNum.trim());
+        	
+        	JOptionPane.showMessageDialog(this, "Profile updated \nName: " + profile.getUsername() + "\nId: " + profile.getId() + "\nPhone number: " +profile.getPhonenum());
+        	});}
+     //refresh (syncs ui)   	
     private void refreshContactList() {
     	contactListModel.clear();
     	

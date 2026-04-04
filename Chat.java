@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 9d04b06e5a3721f11dc0a25a7daae812f0bd0ec3
 import javax.swing.*;
 import java.awt.*;
 import java.time.LocalTime;
@@ -18,6 +14,7 @@ public class Chat extends JPanel {
 
     private Deque<Msg> queue;
 
+    //constructor
     public Chat() {
 
         queue = new LinkedList<>();
@@ -52,6 +49,7 @@ public class Chat extends JPanel {
         chatbox.addActionListener(e -> sendMessage());
     }
 
+    //send message
     private void sendMessage() {
         String message = chatbox.getText().trim();
 
@@ -74,18 +72,18 @@ public class Chat extends JPanel {
         } 
     }
     
-<<<<<<< HEAD
+    //get messages
     public Deque<Msg> getMessages(){
         	return queue;
         	}
-=======
+    //delete
     public void deleteLastMessage() {
         if (!queue.isEmpty()) {
             queue.removeLast();
             refreshChatWindow();
         }
     }
-
+    //edit
     public void editLastMessage(String newContent) {
         if (!queue.isEmpty()) {
             Msg last = queue.removeLast();
@@ -103,5 +101,4 @@ public class Chat extends JPanel {
             chatWindow.append("You (" + msg.getTime().format(formatter) + "): " + msg.getCont() + "\n");
         }
     }
->>>>>>> 9d04b06e5a3721f11dc0a25a7daae812f0bd0ec3
 }
