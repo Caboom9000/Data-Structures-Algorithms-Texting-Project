@@ -3,7 +3,7 @@ public class Contact
 	private String Conname;
 	private String Conid;
 	private String Connum;
-	private Chat chat;
+	private final Chat chat;
 	
 
 	public Contact(String Conname, String Conid, String Connum)

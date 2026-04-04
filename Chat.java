@@ -8,11 +8,11 @@ import javax.swing.*;
 
 public class Chat extends JPanel {
 
-	private JButton send;
-	private JTextField chatbox;
-	private JTextArea chatWindow;
+	private final JButton send;
+	private final JTextField chatbox;
+	private final JTextArea chatWindow;
 
-	private Deque<Msg> queue;
+	private final Deque<Msg> queue;
 
 	//constructor
 	public Chat() {

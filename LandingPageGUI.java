@@ -5,8 +5,8 @@ import javax.swing.*;        // Provides layout managers and styling tools
 public class LandingPageGUI extends JFrame {
 private DefaultListModel<String> contactListModel;
 private JList<String> contactList;
-	private Contactlist contactlist;
-	private Profile profile;
+	private final Contactlist contactlist;
+	private final Profile profile;
    
 	private JPanel centerPanel;
 	private JLabel contactName;
@@ -75,7 +75,7 @@ private JList<String> contactList;
 		}
 		//create new contact object add to list and refresh
 		Contact newContact = new Contact(name.trim(), id.trim(), num.trim());
-		contactlist.addContact(newContact);;
+		contactlist.addContact(newContact);
 		refreshContactList();
 	   	});
 		

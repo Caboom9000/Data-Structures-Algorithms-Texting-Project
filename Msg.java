@@ -1,17 +1,10 @@
-import java.util.Scanner;
-import java.util.UUID;
-
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.HashSet;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Msg {
 		String content;
 		LocalTime timeSent;
-		boolean Sent;
+		//boolean Sent; // this is never read..?
 	
 		@Override
 	    public String toString() {
@@ -23,7 +16,7 @@ public class Msg {
 		
 		this.content = "";
 		this.timeSent = null;
-		this.Sent = false;
+		//this.Sent = false;
 		
 		
 		
