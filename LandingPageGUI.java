@@ -5,8 +5,7 @@ import javax.swing.*;        // Provides layout managers and styling tools
 public class LandingPageGUI extends JFrame {
 private DefaultListModel<String> contactListModel;
 private JList<String> contactList;
-	private final Contactlist contactlist;
-	private final Profile profile;
+	private final FileSystem fileSys;
    
 	private JPanel centerPanel;
 	private JLabel contactName;
@@ -17,11 +16,10 @@ private JList<String> contactList;
 	private JLabel phoneLabel;
 
 	
-	public LandingPageGUI(Contactlist contactlist)
+	public LandingPageGUI(FileSystem _fileSys)
 	{
-		this.contactlist = contactlist; 
-		//default profile
-		this.profile = new Profile("Your name", "0", "000000000000");
+		this.fileSys = _fileSys;
+
 		// Basic window settings
 		setTitle("Chat Application");
 		setSize(950, 600);
@@ -75,7 +73,7 @@ private JList<String> contactList;
 		}
 		//create new contact object add to list and refresh
 		Contact newContact = new Contact(name.trim(), id.trim(), num.trim());
-		contactlist.addContact(newContact);
+		fileSys.addContact(newContact);
 		refreshContactList();
 	   	});
 		
@@ -87,8 +85,9 @@ private JList<String> contactList;
 
 			if (index >= 0) {
 				//gets contact from list + remove it
-				Contact selectedContact = contactlist.getContacts().get(index);
-				contactlist.removeContact(selectedContact);
+				Contact selectedContact;
+                            selectedContact = fileSys.getContacts().get(index);
+				fileSys.removeContact(selectedContact);
 				refreshContactList();
 				
 				//reset chat panel
@@ -110,7 +109,7 @@ private JList<String> contactList;
 			
 			if(index >= 0) {
 				//get selected contact
-				Contact selectedContact = contactlist.getContacts().get(index);
+				Contact selectedContact = fileSys.getContacts().get(index);
 				
 				String newName = JOptionPane.showInputDialog(this, "edit contact name:", selectedContact.getConname());
 				
@@ -152,7 +151,7 @@ private JList<String> contactList;
 
 		// List model holds contact data
 		contactListModel = new DefaultListModel<>();
-	   for (Contact c : contactlist.getContacts()) {
+	   for (Contact c : fileSys.getContacts()) {
 		   contactListModel.addElement(c.getConname());
 	   }
 
@@ -188,9 +187,9 @@ private JList<String> contactList;
 		profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
 		profilePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5)); // padding
 
-		this.nameLabel = new JLabel("Name:" + profile.getUsername());
-		this.idLabel = new JLabel("ID: " + profile.getId());
-		this.phoneLabel = new JLabel("Phone No.: " + profile.getPhonenum());
+		this.nameLabel = new JLabel("Name:" + fileSys.getUsername());
+		this.idLabel = new JLabel("ID: " + fileSys.getId());
+		this.phoneLabel = new JLabel("Phone No.: " + fileSys.getPhonenum());
 
 		this.nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.idLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -215,7 +214,7 @@ private JList<String> contactList;
 					//clear previous ui
 					centerPanel.removeAll();
 
-					Contact selectedContact = contactlist.getContacts().get(index);
+					Contact selectedContact = fileSys.getContacts().get(index);
 					JPanel topBar = new JPanel();
 					topBar.setLayout(new BoxLayout(topBar, BoxLayout.Y_AXIS));
 					
@@ -281,9 +280,9 @@ private JList<String> contactList;
 			
 		//edit profile
 		editProfile.addActionListener(e -> {
-			JTextField nameField = new JTextField(profile.getUsername(), 15);
-			JTextField idField = new JTextField(profile.getId(), 10);
-			JTextField phoneField = new JTextField(profile.getPhonenum(), 12);
+			JTextField nameField = new JTextField(fileSys.getUsername(), 15);
+			JTextField idField = new JTextField(fileSys.getId(), 10);
+			JTextField phoneField = new JTextField(fileSys.getPhonenum(), 12);
 
 			// Panel full of multiple fields
 			JPanel profileChangePanel = new JPanel(new GridLayout(0, 1));
@@ -312,14 +311,14 @@ private JList<String> contactList;
 			
 				if (!newName.isEmpty() && !newId.isEmpty() && !newNum.isEmpty())
 				{
-					profile.setName(newName);
-					profile.setId(newId);
-					profile.setNum(newNum);
+					fileSys.setName(newName);
+					fileSys.setId(newId);
+					fileSys.setNum(newNum);
 
 					// refresh labels for ui
-					nameLabel.setText("Name: " + profile.getUsername());
-					idLabel.setText("ID: " + profile.getId());
-					phoneLabel.setText("Phone No.: " + profile.getPhonenum());
+					nameLabel.setText("Name: " + fileSys.getUsername());
+					idLabel.setText("ID: " + fileSys.getId());
+					phoneLabel.setText("Phone No.: " + fileSys.getPhonenum());
 				
 					JOptionPane.showMessageDialog(this, "Profile updated!");
 				}
@@ -336,7 +335,7 @@ private JList<String> contactList;
 	private void refreshContactList() {
 		contactListModel.clear();
 		
-		for (Contact c : contactlist.getContacts()) {
+		for (Contact c : fileSys.getContacts()) {
 			contactListModel.addElement(c.getConname());
 		}
 	}
