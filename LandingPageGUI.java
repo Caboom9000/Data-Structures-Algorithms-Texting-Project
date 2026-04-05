@@ -1,5 +1,6 @@
 
 import java.awt.*;     // Provides GUI components like JFrame, JButton, JList
+import java.util.Deque;
 import javax.swing.*;        // Provides layout managers and styling tools
 
 public class LandingPageGUI extends JFrame {
@@ -21,7 +22,7 @@ private JList<String> contactList;
 
 		// Basic window settings
 		setTitle("chirp!");
-		setSize(950, 600);
+		setSize(1000, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// BorderLayout splits screen into top, left, centre, right, bottom
@@ -32,9 +33,18 @@ private JList<String> contactList;
 	public void buildUI()
 	{
 		// Top section/App title
-		JLabel title = new JLabel("chirp!", SwingConstants.CENTER);
+		JButton title = new JButton("chirp!");
 		title.setFont(new Font("Arial", Font.BOLD, 22)); // Styling
-		add(title, BorderLayout.NORTH);
+		title.setHorizontalAlignment(SwingConstants.CENTER);
+		title.addActionListener(ev -> returnHome());
+
+		JPanel titlePanel = new JPanel();               // create a container panel
+		titlePanel.add(title);                     // add the button
+		titlePanel.setOpaque(false);
+
+		add(titlePanel, BorderLayout.NORTH);
+
+		
 
 		// Left panel/Contacts
 		JPanel leftPanel = new JPanel();
@@ -119,7 +129,7 @@ private JList<String> contactList;
 				contactList.setSelectedIndex(index);
 				contactName.setText(selectedContact.getConname());
 			}
-			else 
+			else
 			{
 				//no selected contact
 				JOptionPane.showMessageDialog(this, "Please choose a contact to edit");
@@ -151,12 +161,18 @@ private JList<String> contactList;
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 
+		// Refresh UI so it shows up immediately
+		centerPanel.revalidate();
+		centerPanel.repaint();
+
 		// Label showing selected contact name
-		contactName = new JLabel("Contact name");
+		contactName = new JLabel("Select a contact");
 		contactName.setFont(new Font("Arial", Font.BOLD, 16));
 
 		centerPanel.add(contactName, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
+
+		returnHome();
 		// Add centre panel to main window
 		/*add(centerPanel, BorderLayout.CENTER);*/
 		
@@ -220,6 +236,7 @@ private JList<String> contactList;
 					chat.setOnChatUpdate(() ->
 					{
 						fileSys.saveChat(selectedContact);
+						refreshContactList();
 					});
 
 
@@ -251,10 +268,7 @@ private JList<String> contactList;
 
 					topBar.add(chatButtons);
 
-					// 4. Add top bar to center panel
 					centerPanel.add(topBar, BorderLayout.NORTH);
-
-					// 5. Add chat panel
 					centerPanel.add(selectedContact.getChat(), BorderLayout.CENTER);
 
 					centerPanel.revalidate();
@@ -262,10 +276,6 @@ private JList<String> contactList;
 				}
 			}
 		});
-		//show profile // REDUNDANT to be deleted ?
-		/*showProfile.addActionListener(e ->
-			JOptionPane.showMessageDialog(this, "Name: " + profile.getUsername() + "\nID: " + profile.getId() + "\nPhone number: " + profile.getPhonenum()));*/
-			
 		//edit profile
 		editProfile.addActionListener(e -> {
 			String[] newInfo = showInfoDialog("Edit profile", fileSys.getUsername(), fileSys.getPhonenum());
@@ -280,10 +290,67 @@ private JList<String> contactList;
 			fileSys.setName(newName);
 			fileSys.setNum(newNum);
 		});}
-	 //refresh (syncs ui)   	
-	private void refreshContactList() {
-		contactListModel.clear();
+	
+	// Returns the center panel to the default landing page
+	private void returnHome()
+	{
+		centerPanel.removeAll();
+
+		// Reset contact name
+		contactName.setText("Select a contact");
+		centerPanel.add(contactName, BorderLayout.NORTH);
+
+		// Add landing info label
+		JLabel infoLabel = new JLabel("Welcome to chirp! Use the left & right panels to navigate the app");
+		JLabel infoLabel2 = new JLabel("Click the title button to return to this landing page.");
+		JLabel infoLabel3 = new JLabel("Everything is automatically saved.");
 		
+		infoLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+		infoLabel.setForeground(Color.BLUE);
+		infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+		infoLabel2.setFont(new Font("Arial", Font.PLAIN, 14));
+		infoLabel2.setForeground(Color.BLUE);
+		infoLabel2.setHorizontalAlignment(SwingConstants.CENTER);
+
+		infoLabel3.setFont(new Font("Arial", Font.PLAIN, 14));
+		infoLabel3.setForeground(Color.BLUE);
+		infoLabel3.setHorizontalAlignment(SwingConstants.CENTER);
+
+		JPanel landingInfoPanel = new JPanel();
+		landingInfoPanel.setLayout(new BoxLayout(landingInfoPanel, BoxLayout.Y_AXIS)); // stack vertically
+		landingInfoPanel.setOpaque(false); // optional: make background transparent
+
+		landingInfoPanel.add(infoLabel);
+		landingInfoPanel.add(Box.createVerticalStrut(5)); // small space
+		landingInfoPanel.add(infoLabel2);
+		landingInfoPanel.add(Box.createVerticalStrut(5));
+		landingInfoPanel.add(infoLabel3);
+
+		centerPanel.add(landingInfoPanel, SwingConstants.CENTER);
+
+		centerPanel.revalidate();
+		centerPanel.repaint();
+	}
+		//refresh (syncs ui)	
+	private void refreshContactList()
+	{
+		// sort by newest to oldest
+		fileSys.getContacts().sort((c1, c2) -> {
+			Deque<Msg> chat1 = c1.getChat().getMessages();
+			Deque<Msg> chat2 = c2.getChat().getMessages();
+		
+			// Handle empty chats
+			if (chat1.isEmpty() && chat2.isEmpty()) return 0;
+			if (chat1.isEmpty()) return 1; // empty chats go last
+			if (chat2.isEmpty()) return -1;
+		
+			// Compare newest messages (latest first)
+			return chat2.getLast().getTime().compareTo(chat1.getLast().getTime());
+		});
+	
+		// Update JList
+		contactListModel.clear();
 		for (Contact c : fileSys.getContacts()) {
 			contactListModel.addElement(c.getConname());
 		}
