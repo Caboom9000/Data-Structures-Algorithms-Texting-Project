@@ -12,6 +12,9 @@ public class Chat extends JPanel {
 	private final JTextField chatbox;
 	private final JTextArea chatWindow;
 
+	private final JTextField searchField;
+	private final JButton searchButton;
+
 	private final Deque<Msg> queue;
 
 	private Runnable onChatUpdate;
@@ -21,11 +24,25 @@ public class Chat extends JPanel {
 	}
 
 	//constructor
-	public Chat() {
-		queue = new LinkedList<>();
-
+	public Chat()
+	{
 		// Use BorderLayout for clean structure
 		setLayout(new BorderLayout(10, 10));
+
+		// search stuff
+		JPanel searchPanel = new JPanel(new BorderLayout(5,5));
+		searchField = new JTextField();
+		searchButton = new JButton("Search");
+
+		searchPanel.add(searchField, BorderLayout.CENTER);
+		searchPanel.add(searchButton, BorderLayout.EAST);
+
+		add(searchPanel, BorderLayout.NORTH);
+
+		searchButton.addActionListener(e->searchMessages());
+		searchField.addActionListener(e->searchMessages());
+
+		queue = new LinkedList<>();
 
 		// chat display area
 		chatWindow = new JTextArea();
@@ -52,6 +69,28 @@ public class Chat extends JPanel {
 
 		// Allow pressing ENTER to send
 		chatbox.addActionListener(e -> sendMessage());
+	}
+
+	private void searchMessages() {
+		String query = searchField.getText().trim().toLowerCase();
+	
+		chatWindow.setText(""); // clear
+	
+		if (query.isEmpty())
+		{ // search being empty means user is done searching
+			refreshChatWindow();
+			return;
+		}
+	
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+		for (Msg msg : queue)
+		{
+			if (msg.getCont().toLowerCase().contains(query))
+			{
+				chatWindow.append("You (" + msg.getTime().format(formatter) + "): " + msg.getCont() + "\n");
+			}
+		}
 	}
 
 	private void sendMessage()
