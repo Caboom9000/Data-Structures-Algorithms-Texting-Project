@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.function.Consumer;
 import javax.swing.*;
 
 public class Chat extends JPanel {
@@ -14,9 +15,14 @@ public class Chat extends JPanel {
 
 	private final Deque<Msg> queue;
 
+	private Consumer<Msg> onMessageSent;
+	public void setOnMessageSent(Consumer<Msg> listener)
+	{
+		this.onMessageSent = listener;
+	}
+
 	//constructor
 	public Chat() {
-
 		queue = new LinkedList<>();
 
 		// Use BorderLayout for clean structure
@@ -49,15 +55,16 @@ public class Chat extends JPanel {
 		chatbox.addActionListener(e -> sendMessage());
 	}
 
-	//send message
-	private void sendMessage() {
+	private void sendMessage()
+	{
 		String message = chatbox.getText().trim();
 
 		if (!message.isEmpty()) {
 
 			Msg newMessage = new Msg();
-			newMessage.setCont(message);
+			newMessage.setOwner("You");
 			newMessage.setTime(LocalTime.now());
+			newMessage.setCont(message);
 
 			queue.add(newMessage);
 
@@ -66,10 +73,40 @@ public class Chat extends JPanel {
 					.format(DateTimeFormatter.ofPattern("HH:mm"));
 
 			// Display message
-			chatWindow.append("You (" + time + "): " + newMessage.getCont() + "\n");
+			chatWindow.append(
+				String.format("%s (%s): %s\n",
+				newMessage.getOwner(),
+				time,
+				newMessage.getCont()));
 
 			chatbox.setText("");
+
+			if (onMessageSent != null)
+				onMessageSent.accept(newMessage);
 		} 
+	}
+	void sendMessage(String _owner, String _cont, LocalTime _time)
+	{
+		Msg newMessage = new Msg();
+		newMessage.setOwner(_owner);
+		newMessage.setCont(_cont);
+		newMessage.setTime(_time);
+
+		queue.add(newMessage);
+
+		// Format time
+		String time = newMessage.getTime()
+				.format(DateTimeFormatter.ofPattern("HH:mm"));
+
+		// Display message
+		chatWindow.append(
+			String.format("%s (%s): %s\n",
+			newMessage.getOwner(),
+			time,
+			newMessage.getCont()));
+
+		if (onMessageSent != null)
+			onMessageSent.accept(newMessage);
 	}
 	
 	//get messages
@@ -108,4 +145,5 @@ public class Chat extends JPanel {
 			chatWindow.append("You (" + msg.getTime().format(formatter) + "): " + msg.getCont() + "\n");
 		}
 	}
+	
 }

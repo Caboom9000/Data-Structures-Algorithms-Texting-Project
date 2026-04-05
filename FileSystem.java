@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Deque;
 
 @SuppressWarnings("CallToPrintStackTrace")
 public final class FileSystem
@@ -60,7 +63,9 @@ public final class FileSystem
 	{
 		contactlist.removeContact(contact);
 		saveContactMetaData();
-		// deleteChat(Contact contact)
+		
+		File chatFile = new File(String.format("cache/chats/%d.csv", contact.getConid()));
+		if (chatFile.exists()) chatFile.delete();
 	}
 	public ArrayList<Contact> getContacts()
 	{
@@ -136,7 +141,24 @@ public final class FileSystem
 	public void saveChat(Contact contact)
 	{
 		pathCheck(String.format("cache/chats/%d.csv", contact.getConid()));
-		// if no chat file exists, make one
+		
+		Deque<Msg> chat = contact.getChat().getMessages();
+
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(String.format("cache/chats/%s.csv", contact.getConid()))))
+		{
+			for (Msg msg : chat)
+			{
+				// Format time
+				String time = msg.getTime()
+					.format(DateTimeFormatter.ofPattern("HH:mm"));
+
+				bw.write(String.format("%s,%s,%s\n", msg.getOwner(), msg.getCont(), msg.getTime()));
+			}
+		}
+		catch (IOException error)
+		{
+			error.printStackTrace();
+		}
 	}
 
 	public void saveProfile()
@@ -200,6 +222,7 @@ public final class FileSystem
 				String num = parts[2].trim();
 
 				Contact contact = new Contact(name, id, num);
+				contact = this.loadChat(contact);
 				this.contactlist.addContact(contact);
 			}
 		}
@@ -207,6 +230,32 @@ public final class FileSystem
 		{
 			error.printStackTrace();
 		}
+	}
+	public Contact loadChat(Contact contact)
+	{
+		pathCheck(String.format("cache/chats/%d.csv", contact.getConid()));
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
+
+		try (BufferedReader br = new BufferedReader(new FileReader(String.format("cache/chats/%d.csv", contact.getConid()))))
+		{
+			String line;
+
+			while ((line = br.readLine()) != null)
+			{
+				String[] parts = line.split(",");
+				String owner = parts[0];
+				String cont = parts[1];
+				LocalTime time = LocalTime.parse(parts[2], formatter);
+
+				contact.addMessage(owner, cont, time);
+			}
+		}
+		catch (IOException error)
+		{
+			error.printStackTrace();
+		}
+
+		return contact;
 	}
 	/*--------------------------*/
 }

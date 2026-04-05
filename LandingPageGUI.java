@@ -213,7 +213,12 @@ private JList<String> contactList;
 					chatButtons.add(deleteLast);
 					chatButtons.add(editLast);
 
-					Chat chat = selectedContact.getChat(); 
+					Chat chat = selectedContact.getChat();
+
+					chat.setOnMessageSent(msg ->
+					{
+						fileSys.saveChat(selectedContact);
+					});
 
 					deleteLast.addActionListener(ev ->
 					{

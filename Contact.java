@@ -1,3 +1,6 @@
+
+import java.time.LocalTime;
+
 public class Contact
 {
 	private String Conname;
@@ -12,6 +15,12 @@ public class Contact
 		this.Conid = Conid;
 		this.Connum = Connum;
 		this.chat = new Chat();
+	}
+
+	//add message (used on program startup)
+	public void addMessage(String owner, String cont, LocalTime time)
+	{
+		this.chat.sendMessage(owner, cont, time);
 	}
 	
 	//set methods

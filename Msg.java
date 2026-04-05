@@ -2,9 +2,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Msg {
-		String content;
-		LocalTime timeSent;
-		//boolean Sent; // this is never read..?
+		private String owner;
+		private String content;
+		private LocalTime timeSent;
 	
 		@Override
 	    public String toString() {
@@ -12,39 +12,38 @@ public class Msg {
 	        return "[" + timeSent.format(format) + "] " + content;
 	    }
 	
-	public Msg(){
-		
+	public Msg()
+	{
+		this.owner = "?";
 		this.content = "";
 		this.timeSent = null;
-		//this.Sent = false;
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	
-	public String getCont() {
+
+	public String getOwner()
+	{
+		return owner;
+	}
+	public String getCont()
+	{
 		return content;
 	}
-	
-	public void setCont(String cont) {
-		content = cont;
-		
-	}
-	
-	public LocalTime getTime() {
+	public LocalTime getTime()
+	{
 		return timeSent;
 	}
 	
-	public void setTime(LocalTime time) {
-		timeSent = time;
+	public void setOwner(String _owner)
+	{
+		this.owner = _owner;
+	}
+	public void setCont(String cont)
+	{
+		content = cont;
 		
 	}
-
-
+	public void setTime(LocalTime time)
+	{
+		timeSent = time;
+	}
 }
