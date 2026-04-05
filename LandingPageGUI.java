@@ -108,6 +108,7 @@ private JList<String> contactList;
 				Contact selectedContact = fileSys.getContacts().get(index);
 				
 				String [] newInfo = showInfoDialog("Edit contact", selectedContact.getConname(), selectedContact.getConnum());
+				if (newInfo == null) return;
 
 				String name = newInfo[0];
 				String num = newInfo[1];
@@ -213,12 +214,14 @@ private JList<String> contactList;
 					chatButtons.add(deleteLast);
 					chatButtons.add(editLast);
 
-					Chat chat = selectedContact.getChat();
 
-					chat.setOnMessageSent(msg ->
+					Chat chat = selectedContact.getChat();
+					// Save the chat when a message is sent, edited, or deleted
+					chat.setOnChatUpdate(() ->
 					{
 						fileSys.saveChat(selectedContact);
 					});
+
 
 					deleteLast.addActionListener(ev ->
 					{
@@ -312,7 +315,23 @@ private JList<String> contactList;
 			String inputNum = phoneField.getText().trim();
 			if (!inputName.isEmpty() && !inputNum.isEmpty())
 			{
+				if (inputName.contains(","))
+				{
+					JOptionPane.showMessageDialog(this, "Commas are not allowed in the name field");
+					return null;
+				}
+
+				if (!inputNum.matches("\\d+") || inputNum.length() > 10)
+				{
+					JOptionPane.showMessageDialog(this, "Phone number field must contain a 10-digit number");
+					return null;
+				}
+
 				return new String[]{inputName, inputNum};
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(this, "Both fields are required");
 			}
 		}
 		return null; // user canceled or fields invalid

@@ -18,9 +18,9 @@ public class Contact
 	}
 
 	//add message (used on program startup)
-	public void addMessage(String owner, String cont, LocalTime time)
+	public void addMessage(String owner, LocalTime time, String cont)
 	{
-		this.chat.sendMessage(owner, cont, time);
+		this.chat.sendMessage(owner, time, cont);
 	}
 	
 	//set methods

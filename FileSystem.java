@@ -18,7 +18,7 @@ public final class FileSystem
 	public FileSystem()
 	{
 		this.contactlist = new Contactlist();
-		this.profile = new Profile("User", "0", "000000000000");
+		this.profile = new Profile();
 
 		loadProfile();
 		loadContacts();
@@ -148,11 +148,8 @@ public final class FileSystem
 		{
 			for (Msg msg : chat)
 			{
-				// Format time
-				String time = msg.getTime()
-					.format(DateTimeFormatter.ofPattern("HH:mm"));
-
-				bw.write(String.format("%s,%s,%s\n", msg.getOwner(), msg.getCont(), msg.getTime()));
+				// saved as: owner,hh:mm:ssssss,""
+				bw.write(String.format("%s,%s,\"%s\"\n", msg.getOwner(), msg.getTime(), msg.getCont()));
 			}
 		}
 		catch (IOException error)
@@ -242,12 +239,16 @@ public final class FileSystem
 
 			while ((line = br.readLine()) != null)
 			{
-				String[] parts = line.split(",");
+				// chat messages are saved ass owner, time, content
+				String[] parts = line.split(",", 3);
 				String owner = parts[0];
-				String cont = parts[1];
-				LocalTime time = LocalTime.parse(parts[2], formatter);
+				LocalTime time = LocalTime.parse(parts[1], formatter);
+				String cont = parts[2];
 
-				contact.addMessage(owner, cont, time);
+				// remove the start and end quotations from content
+				cont = cont.substring(1, cont.length()-1);
+
+				contact.addMessage(owner, time, cont);
 			}
 		}
 		catch (IOException error)

@@ -4,7 +4,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.function.Consumer;
 import javax.swing.*;
 
 public class Chat extends JPanel {
@@ -15,10 +14,10 @@ public class Chat extends JPanel {
 
 	private final Deque<Msg> queue;
 
-	private Consumer<Msg> onMessageSent;
-	public void setOnMessageSent(Consumer<Msg> listener)
+	private Runnable onChatUpdate;
+	public void setOnChatUpdate(Runnable listener)
 	{
-		this.onMessageSent = listener;
+		this.onChatUpdate = listener;
 	}
 
 	//constructor
@@ -81,16 +80,17 @@ public class Chat extends JPanel {
 
 			chatbox.setText("");
 
-			if (onMessageSent != null)
-				onMessageSent.accept(newMessage);
+			// broadcast an event that will be picked up by the FileSystem in LandingPageGUI to save the chat
+			if (onChatUpdate != null)
+				onChatUpdate.run();
 		} 
 	}
-	void sendMessage(String _owner, String _cont, LocalTime _time)
+	void sendMessage(String _owner, LocalTime _time, String _cont)
 	{
 		Msg newMessage = new Msg();
 		newMessage.setOwner(_owner);
-		newMessage.setCont(_cont);
 		newMessage.setTime(_time);
+		newMessage.setCont(_cont);
 
 		queue.add(newMessage);
 
@@ -105,8 +105,9 @@ public class Chat extends JPanel {
 			time,
 			newMessage.getCont()));
 
-		if (onMessageSent != null)
-			onMessageSent.accept(newMessage);
+		// broadcast an event that will be picked up by the FileSystem in LandingPageGUI to save the chat
+		if (onChatUpdate != null)
+			onChatUpdate.run();
 	}
 	
 	//get messages
@@ -121,19 +122,29 @@ public class Chat extends JPanel {
 		return null;
 	}
 	//delete
-	public void deleteLastMessage() {
-		if (!queue.isEmpty()) {
+	public void deleteLastMessage()
+	{
+		if (!queue.isEmpty())
+		{
 			queue.removeLast();
 			refreshChatWindow();
+
+			if (onChatUpdate != null)
+				onChatUpdate.run();
 		}
 	}
 	//edit
-	public void editLastMessage(String newContent) {
-		if (!queue.isEmpty()) {
+	public void editLastMessage(String newContent)
+	{
+		if (!queue.isEmpty())
+		{
 			Msg last = queue.removeLast();
 			last.setCont(newContent);
 			queue.addLast(last);
 			refreshChatWindow();
+
+			if (onChatUpdate != null)
+				onChatUpdate.run();
 		}
 	}
 

@@ -1,16 +1,17 @@
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class Msg {
-		private String owner;
-		private String content;
-		private LocalTime timeSent;
+public class Msg
+{
+	private String owner;
+	private String content;
+	private LocalTime timeSent;
 	
-		@Override
-	    public String toString() {
-			DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
-	        return "[" + timeSent.format(format) + "] " + content;
-	    }
+	@Override
+	public String toString() {
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
+	    return "[" + timeSent.format(format) + "] " + content;
+	}
 	
 	public Msg()
 	{
