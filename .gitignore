@@ -1,3 +1,6 @@
 *.class
 *.class
 *.csv
+.DS_Store
+chirp\!.jar
+*.jar
