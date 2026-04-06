@@ -1,56 +1,57 @@
-import java.util.Deque;
-import java.util.LinkedList;
 
-public class Contact {
+import java.time.LocalTime;
+
+public class Contact
+{
 	private String Conname;
-	private String Conid;
+	private final int Conid;
 	private String Connum;
-	private Chat chat;
+	private final Chat chat;
 	
-public Contact(String Conname, String Conid, String Connum) {
-	this.Conname = Conname;
-	this.Conid = Conid;
-	this.Connum = Connum;
-	this.chat = new Chat();
-}
 
-//set methods
-public void setConname(String conname) {
-	this.Conname = conname;
-}
+	public Contact(String Conname, int Conid, String Connum)
+	{
+		this.Conname = Conname;
+		this.Conid = Conid;
+		this.Connum = Connum;
+		this.chat = new Chat();
+	}
 
-public void setConid(String conid) {
-	this.Conid = conid;
-}
-
-public void setConnum(String connum) {
-	this.Connum = connum;
-}
-
-//get methods
-public String getConname(){
-	return Conname;
-}
-
-public String getConid(){
-	return Conid;
-}
-
-public String getConnum(){
-	return Connum;
-}
-
-public Chat getChat() {
-	return chat;
-}
-
-//display contact
-public void displaycontact(){
-		System.out.println("                         ");
-		System.out.println("ID: " + Conid);
-		System.out.println("Name: " + Conname);
-		System.out.println("Phone: " + Connum);
-		System.out.println("                         ");
+	//add message (used on program startup)
+	public void addMessage(String owner, LocalTime time, String cont)
+	{
+		this.chat.sendMessage(owner, time, cont);
+	}
+	
+	//set methods
+	public void setConname(String conname)
+	{
+		this.Conname = conname;
+	}
+	
+	public void setConnum(String connum)
+	{
+		this.Connum = connum;
+	}
+	
+	//get methods
+	public String getConname()
+	{
+		return Conname;
+	}
+	
+	public int getConid()
+	{
+		return Conid;
+	}
+	
+	public String getConnum()
+	{
+		return Connum;
+	}
+	
+	public Chat getChat()
+	{
+		return chat;
 	}
 }
-
