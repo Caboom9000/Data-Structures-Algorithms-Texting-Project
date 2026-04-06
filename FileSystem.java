@@ -186,7 +186,7 @@ public final class FileSystem
 			{
 				String[] parts = line.split(",");
 				
-				String name = parts[0].trim(); // [TODO] VALIDATE ARRAY IS LONG ENOUGH
+				String name = parts[0].trim();
 				String num  = parts[1].trim();
 
 				this.profile.setName(name);
@@ -212,7 +212,7 @@ public final class FileSystem
 
 			while ((line = br.readLine()) != null)
 			{
-				String[] parts = line.split(","); // [TODO] VALIDATE ARRAY IS LONG ENOUGH
+				String[] parts = line.split(",");
 
 				int id = Integer.parseInt(parts[0].trim());
 				String name = parts[1].trim();
