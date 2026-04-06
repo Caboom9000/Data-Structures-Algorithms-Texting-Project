@@ -114,7 +114,7 @@ private JList<String> contactList;
 			
 			if(index >= 0)
 			{
-				//get selected contact [TODO]
+				//get selected contact
 				Contact selectedContact = fileSys.getContacts().get(index);
 				
 				String [] newInfo = showInfoDialog("Edit contact", selectedContact.getConname(), selectedContact.getConnum());
