@@ -54,14 +54,4 @@ public class Contact
 	{
 		return chat;
 	}
-	
-	//display contact
-	public void displaycontact()
-	{
-		System.out.println("                         ");
-		System.out.println("ID: " + Conid);
-		System.out.println("Name: " + Conname);
-		System.out.println("Phone: " + Connum);
-		System.out.println("                         ");
-	}
 }

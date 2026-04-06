@@ -124,7 +124,7 @@ public class Chat extends JPanel {
 				onChatUpdate.run();
 		} 
 	}
-	void sendMessage(String _owner, LocalTime _time, String _cont)
+	public void sendMessage(String _owner, LocalTime _time, String _cont)
 	{
 		Msg newMessage = new Msg();
 		newMessage.setOwner(_owner);
